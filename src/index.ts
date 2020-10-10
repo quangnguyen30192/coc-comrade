@@ -1,10 +1,11 @@
 import {
-  commands,
   CompleteResult,
   ExtensionContext,
   sources,
   workspace,
 } from "coc.nvim";
+
+import { Candidate } from "./types";
 
 const delay = (delay: number) => new Promise((res) => setTimeout(res, delay));
 
@@ -14,9 +15,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
   context.subscriptions.push(
     sources.createSource({
       name: "coc-comrade completion source", // unique id
-      shortcut: "IDEA", // [CS] is custom source
+      shortcut: "IntelliJ", // [CS] is custom source
       priority: 99,
       triggerCharacters: ["."],
+      filetypes: ["java", "kotlin"],
+      duplicate: true,
       doComplete: async function () {
         const buffer = await workspace.nvim.buffer;
         const bufferId = buffer.id;
@@ -47,15 +50,19 @@ export async function activate(context: ExtensionContext): Promise<void> {
         ) {
           await delay(100);
           ret.new_request = false;
+          await delay(200);
           results = await workspace.nvim.call("comrade#RequestCompletion", [
             buffer.id,
-            ret,
+            {
+              ...ret,
+              new_request: false,
+            },
           ]);
         }
 
         return {
-          items: results.candidates.map((x) => ({
-            ...x,
+          items: results.candidates.map((candidate: Candidate) => ({
+            ...candidate,
             menu: (this as any).menu,
           })),
         } as CompleteResult;

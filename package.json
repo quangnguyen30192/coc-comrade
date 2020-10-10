@@ -35,7 +35,8 @@
     "webpack-cli": "^3.3.11"
   },
   "activationEvents": [
-    "*"
+    "onLanguage:java",
+    "onLanguage:kotlin"
   ],
   "contributes": {
     "configuration": {
