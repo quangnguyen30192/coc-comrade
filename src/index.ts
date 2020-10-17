@@ -35,7 +35,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
           buf_name: bufferName,
           buf_changedtick: changedTick,
           row: row - 1,
-          col: col,
+          col: col - 1,
           new_request: true,
         };
 
