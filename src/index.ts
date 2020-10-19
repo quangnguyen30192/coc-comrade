@@ -3,6 +3,8 @@ import {
   ExtensionContext,
   sources,
   workspace,
+  VimCompleteItem,
+  CompleteOption,
 } from "coc.nvim";
 
 import { Candidate } from "./types";
@@ -48,9 +50,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
           typeof results.is_finished == "boolean" &&
           !results.is_finished
         ) {
-          await delay(100);
-          ret.new_request = false;
-          await delay(200);
+          await delay(1500);
           results = await workspace.nvim.call("comrade#RequestCompletion", [
             buffer.id,
             {
@@ -67,7 +67,14 @@ export async function activate(context: ExtensionContext): Promise<void> {
           })),
         } as CompleteResult;
       },
+      // onCompleteDone: async function (
+      // item: VimCompleteItem,
+      // opt: CompleteOption
+      // ) {
+      // workspace.showMessage(JSON.stringify(item));
+      // workspace.showMessage(JSON.stringify(opt));
+      // workspace.showMessage("completion done called");
+      // },
     })
   );
 }
-
